@@ -14,7 +14,7 @@ export const verifyEmail = (token, email) => {
     from: process.env.MAIL_USER,
     to: email,
     subject: "Email Verification",
-    text: `Hi babu what are you doing! don't click link only i was checking
+    text: `Hi dude what are you doing! don't click link only i was checking
            Please verify your email:
            http://localhost:5173/verify/${token}
             Thanks`,

@@ -1,7 +1,7 @@
 import express from 'express'
-import { allUsers, changePassword, forgotPassword, getUserById, login, logout, otpVerify, register, reVerify, updateUser, verify } from '../controllers/userControllers.js'
+import { allUsers, changePassword, forgotPassword, getUserById, login, logout, otpVerify, refreshToken, register, reVerify, updateUser, verify } from '../controllers/userControllers.js'
 import { isAdmin, isAuthenticated } from '../middleware/isAuthenticated.js'
-import upload from '../middleware/multer.js'
+
 import { getSalt } from 'bcryptjs'
 import { singleUpload } from '../middleware/multer.js'
 
@@ -14,6 +14,7 @@ router.post('/register',register)
 router.get('/verify/:token', verify)
 router.post('/reverify',reVerify) 
 router.post('/login',login)
+router.post("/refresh", refreshToken);
 router.post("/logout", isAuthenticated,logout)
 router.post("/forgot-password", forgotPassword);
 router.post("/verify-otp", otpVerify);

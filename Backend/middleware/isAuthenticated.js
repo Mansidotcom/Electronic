@@ -10,7 +10,7 @@ export const isAuthenticated = async (req, res, next) => {
         success: false,
         message: "Authorization header missing",
       });
-    }
+    } 
 
     // STRONG TOKEN EXTRACT (handles extra spaces)
     

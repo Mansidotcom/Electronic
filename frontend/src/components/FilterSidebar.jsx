@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
+import { X } from "lucide-react";
 
 
 
@@ -13,6 +14,7 @@ const FilterSidebar = ({
   priceRange = [0, 9999999],
   setPriceRange,
   allProducts = [],
+  onClose,
 }) => {
 
   console.log("PRICE RANGE:", priceRange);
@@ -55,7 +57,12 @@ const handleMaxChange = (e) => {
   };
 
   return (
-    <div className="bg-gray-200 mt-10 pr-4 p-4 rounded-md h-max md:block w-60 -ml-10">
+    <div className="bg-gray-200 mt-10 pr-4 p-4 rounded-md h-max md:block w-60 -ml-10 relative">
+      {onClose && (
+        <button onClick={onClose} className="absolute top-2 right-2 md:hidden">
+          <X size={20} />
+        </button>
+      )}
       {/* Search */}
       <input
         type="text"

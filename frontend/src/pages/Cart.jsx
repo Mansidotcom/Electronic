@@ -102,7 +102,7 @@ useEffect(() => {
             Shopping Cart
           </h1>
 
-          <div className="flex gap-6 items-start">
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
             {/* CART ITEMS */}
             <div className="flex-1 flex flex-col gap-5">
               {items.map((product, index) => {
@@ -183,7 +183,7 @@ useEffect(() => {
             </div>
 
             {/* ORDER SUMMARY */}
-            <Card className="w-[400px]">
+            <Card className="w-full lg:w-[400px]">
               <CardHeader>
                 <CardTitle>Order Summary</CardTitle>
               </CardHeader>

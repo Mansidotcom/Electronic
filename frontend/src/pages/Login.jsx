@@ -19,14 +19,13 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/userSlice";
 
 
-
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
-  });
+    password: "", 
+  }); 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,8 +54,9 @@ const Login = () => {
       );
 
       if (res.data.success) {
-        dispatch(setUser(res.data.user));   // ✅ FIRST
+        dispatch(setUser(res.data.user));   
         localStorage.setItem("accessToken", res.data.accessToken);
+        localStorage.setItem("refreshToken", res.data.refreshToken);
         toast.success(res.data.message);
         navigate("/");
       }
@@ -74,9 +74,9 @@ const Login = () => {
     <div className="flex justify-center items-center min-h-screen bg-pink-100">
       <Card className="w-full max-w-sm bg-gray-50 border-0">
         <CardHeader>
-          <CardTitle>Create your account</CardTitle>
+          <CardTitle>Login to your account</CardTitle>
           <CardDescription>
-            Enter your details to create an account
+            Enter your email and password to login
           </CardDescription>
         </CardHeader>
 

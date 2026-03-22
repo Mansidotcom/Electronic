@@ -3,8 +3,8 @@ import { setCart } from "@/redux/productSlice";
 import { store } from "@/redux/Store";
 import { setUser } from "@/redux/userSlice";
 import axios from "axios";
-import { ShoppingCart } from "lucide-react";
-import React from "react";
+import { Menu, ShoppingCart, X } from "lucide-react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -13,6 +13,7 @@ import { toast } from "sonner";
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   //  REAL USER FROM REDUx
   const user = useSelector((state) => state.user?.user);
@@ -25,34 +26,42 @@ const Navbar = () => {
 
   const logoutHandler = async () => {
     try {
-      await axios.post(
-        "http://localhost:8000/api/v1/user/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        } 
-      );
+      if (accessToken) {
+        await axios.post(
+          "http://localhost:8000/api/v1/user/logout",
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          } 
+        );
+      }
 
       // CLEAR STATE + TOKEN
       dispatch(setUser(null));
       dispatch(setCart({ items: [], totalPrice:0 }));
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
 
       toast.success("Logged out successfully");
       navigate("/login");
     } catch (error) {
-      toast.error("Logout failed");
+      // Even if logout fails (e.g., token expired), clear client-side state
+      dispatch(setUser(null));
+      dispatch(setCart({ items: [], totalPrice:0 }));
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+
+      toast.success("Logged out successfully");
+      navigate("/login");
       console.log(error);
     }
   };
 
-  console.log(cart)
-
   return (
     <header className="bg-pink-50 fixed w-full z-20 border-b border-pink-200">
-      <div className="max-w-7xl mx-auto flex justify-between items-center py-3">
+      <div className="max-w-7xl mx-auto flex justify-between items-center py-3 px-4">
 
         {/* LOGO */}
         <div className="flex items-center gap-2">
@@ -60,8 +69,8 @@ const Navbar = () => {
           <span className="text-2xl font-bold text-pink-600">Ekart</span>
         </div>
 
-        {/* NAV */}
-        <nav className="flex gap-10 items-center">
+        {/* DESKTOP NAV */}
+        <nav className="hidden md:flex gap-10 items-center">
           <ul className="flex gap-7 items-center text-lg font-semibold">
             <li><Link to="/">Home</Link></li>
             <li><Link to="/products">Products</Link></li>
@@ -76,7 +85,7 @@ const Navbar = () => {
 
               {admin && (
               <li>
-                <Link to={`/dashboard/sales}`}>Dashboard</Link> 
+                <Link to={`/dashboard/sales`}>Dashboard</Link> 
               </li>
             )
             }
@@ -84,7 +93,7 @@ const Navbar = () => {
 
           <Link to="/cart" className="relative">
             <ShoppingCart />
-            <span className="bg-pink-500 rounded-full absolute text-white -top-3 -right-5 px-2">
+            <span className="bg-pink-500 rounded-full absolute text-white -top-3 -right-5 px-2 text-sm">
               {cart?.items?.length || 0}
             </span>
           </Link>
@@ -107,7 +116,51 @@ const Navbar = () => {
             </Link>
           )}
         </nav>
+
+        {/* MOBILE MENU BUTTON */}
+        <div className="md:hidden flex items-center gap-4">
+          <Link to="/cart" className="relative">
+            <ShoppingCart />
+            <span className="bg-pink-500 rounded-full absolute text-white -top-3 -right-5 px-2 text-sm">
+              {cart?.items?.length || 0}
+            </span>
+          </Link>
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-pink-600">
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
+
+      {/* MOBILE MENU */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-pink-50 border-t border-pink-200">
+          <div className="px-4 py-4 space-y-4">
+            <Link to="/" className="block text-lg font-semibold" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            <Link to="/products" className="block text-lg font-semibold" onClick={() => setIsMenuOpen(false)}>Products</Link>
+            {user && (
+              <Link to={`/profile/${user._id}`} className="block text-lg font-semibold" onClick={() => setIsMenuOpen(false)}>Hello, {user.firstname}</Link>
+            )}
+            {admin && (
+              <Link to={`/dashboard/sales`} className="block text-lg font-semibold" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
+            )}
+            {user ? (
+              <Button
+                type="button"
+                onClick={() => { logoutHandler(); setIsMenuOpen(false); }}
+                className="bg-pink-600 text-white w-full"
+              >
+                Logout
+              </Button>
+            ) : (
+              <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                <Button className="bg-blue-600 text-white w-full">
+                  Login
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

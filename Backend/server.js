@@ -36,11 +36,11 @@ app.use("/api/v1/cart", cartRoute);
 app.use("/api/v1/orders", orderRoute);
 
 // ✅ SERVE FRONTEND (VERY IMPORTANT)
-app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 // Wildcard route catch-all (safe for express path-to-regexp version)
 app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 // start server

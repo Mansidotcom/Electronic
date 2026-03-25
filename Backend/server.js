@@ -5,34 +5,45 @@ import userRoute from "./routes/UserRoute.js";
 import cors from "cors";
 import productRoutes from "./routes/productsRout.js";
 import cartRoute from "./routes/cartRoute.js";
-import orderRoute from "./routes/orderRoute.js"
+import orderRoute from "./routes/orderRoute.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 
+// FIX for __dirname (ES Modules)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 8000;
 
-
+// middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json());
+// ✅ FIXED CORS (production + local)
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: "*",
     credentials: true,
   })
 );
 
-
-
+// API routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/cart", cartRoute);
 app.use("/api/v1/orders", orderRoute);
 
+// ✅ SERVE FRONTEND (VERY IMPORTANT)
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 
+// Wildcard route catch-all (safe for express path-to-regexp version)
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
 
+// start server
 app.listen(PORT, () => {
   connectDB();
   console.log(`server is listening at port:${PORT}`);

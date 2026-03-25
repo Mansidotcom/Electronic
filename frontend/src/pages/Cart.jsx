@@ -27,7 +27,7 @@ const Cart = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const API = 'http://localhost:8000/api/v1/cart'
+  const API = `${import.meta.env.VITE_API_BASE_URL}/cart`
   const accessToken = localStorage.getItem('accessToken')
 
   const loadCart = async ()=>{
@@ -104,7 +104,7 @@ useEffect(() => {
 
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             {/* CART ITEMS */}
-            <div className="flex-1 flex flex-col gap-5">
+            <div className="flex-1 flex flex-col gap-4 md:gap-5">
               {items.map((product, index) => {
                 // ✅ SAFETY GUARD (MOST IMPORTANT)
                 if (!product?.productId) return null
@@ -112,71 +112,74 @@ useEffect(() => {
                 return (
                   <div
                     key={index}
-                    className="flex items-center justify-between bg-white p-4 rounded shadow"
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white p-4 rounded-lg shadow-sm gap-4"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 flex-1">
                       <img
                         src={
-                          product.productId.productimg?.[0]?.url 
+                          product.productId.productimg?.[0]?.url
                         }
                         alt=""
-                        className="w-20 h-20 object-cover rounded"
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded"
                       />
 
-                      <div>
-                        <h2 className="font-semibold">
+                      <div className="flex-1 min-w-0">
+                        <h2 className="font-semibold text-sm sm:text-base truncate">
                           {product.productId.productName}
                         </h2>
-                        <p className="text-gray-600">
+                        <p className="text-gray-600 text-sm sm:text-base">
                           ₹ {product.productId.productPrice}
                         </p>
                       </div>
                     </div>
 
-                    {/* QUANTITY */}
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          handleUpdateQuantity(
-                            product.productId._id,
-                            'decrease'
-                          )
-                        }
-                      >
-                        -
-                      </Button>
+                    {/* QUANTITY AND ACTIONS */}
+                    <div className="flex items-center justify-between w-full sm:w-auto gap-4">
+                      {/* QUANTITY */}
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleUpdateQuantity(
+                              product.productId._id,
+                              'decrease'
+                            )
+                          }
+                        >
+                          -
+                        </Button>
 
-                      <span className="px-2">{product.quantity}</span>
+                        <span className="px-2 min-w-[2rem] text-center">{product.quantity}</span>
 
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          handleUpdateQuantity(
-                            product.productId._id,
-                            'increase'
-                          )
-                        }
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleUpdateQuantity(
+                              product.productId._id,
+                              'increase'
+                            )
+                          }
+                        >
+                          +
+                        </Button>
+                      </div>
+
+                      {/* ITEM TOTAL */}
+                      <p className="font-semibold text-sm sm:text-base whitespace-nowrap">
+                        ₹{product.productId.productPrice * product.quantity}
+                      </p>
+
+                      {/* REMOVE */}
+                      <button
+                        onClick={() => handleRemove(product.productId._id)}
+                        className="flex text-red-500 items-center gap-1 cursor-pointer hover:text-red-700 transition-colors"
                       >
-                        +
-                      </Button>
+                        <Trash2 className="w-4 h-4" />
+                        <span className="hidden sm:inline text-sm">Remove</span>
+                      </button>
                     </div>
-
-                    {/* ITEM TOTAL */}
-                    <p className="font-semibold">
-                      ₹{' '}
-                      {product.productId.productPrice *
-                        product.quantity}
-                    </p>
-
-                    {/* REMOVE (UI only, logic later) */}
-                    <p 
-                    
-                    onClick={() => handleRemove(product.productId._id)}
-                    className="flex text-red-500 items-center gap-1 cursor-pointer">
-                      <Trash2 className="w-4 h-4" />
-                      Remove
-                    </p>
                   </div>
                 )
               })}

@@ -57,42 +57,48 @@ const handleMaxChange = (e) => {
   };
 
   return (
-    <div className="bg-gray-200 mt-10 pr-4 p-4 rounded-md h-max md:block w-60 -ml-10 relative">
+    <div className="bg-gray-200 mt-10 p-4 rounded-md h-max md:block w-full md:w-60 md:-ml-0 relative">
       {onClose && (
-        <button onClick={onClose} className="absolute top-2 right-2 md:hidden">
+        <button onClick={onClose} className="absolute top-2 right-2 md:hidden z-10">
           <X size={20} />
         </button>
       )}
+
       {/* Search */}
-      <input
-        type="text"
-        placeholder="Search..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="bg-white p-2 rounded-md border-gray-400 border-2 w-full"
-      />
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="bg-white p-3 rounded-md border border-gray-300 w-full focus:outline-none focus:ring-2 focus:ring-pink-500"
+        />
+      </div>
 
       {/* Category */}
-      <h1 className="mt-5 font-semibold text-xl">Category</h1>
-      <div className="flex flex-col gap-2 mt-3">
-        {uniqueCategory.map((item, index) => (
-          <label key={index} className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="category"
-              checked={category === item}
-              onChange={() => handleCategoryClick(item)}
-            />
-            {item}
-          </label>
-        ))}
+      <div className="mb-6">
+        <h1 className="font-semibold text-lg mb-3">Category</h1>
+        <div className="flex flex-col gap-2">
+          {uniqueCategory.map((item, index) => (
+            <label key={index} className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-1 rounded">
+              <input
+                type="radio"
+                name="category"
+                checked={category === item}
+                onChange={() => handleCategoryClick(item)}
+                className="text-pink-600 focus:ring-pink-500"
+              />
+              <span className="text-sm">{item}</span>
+            </label>
+          ))}
+        </div>
       </div>
 
       {/* Brand */}
-      <h1 className="mt-5 font-semibold text-xl">Brand</h1>
-      <div className="flex flex-col gap-2 mt-3">
+      <div className="mb-6">
+        <h1 className="font-semibold text-lg mb-3">Brand</h1>
         <select
-          className="bg-white w-full p-2 border-gray-300 border-2 rounded-md"
+          className="bg-white w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           value={brand}
           onChange={handleBrandChange}
         >
@@ -102,62 +108,69 @@ const handleMaxChange = (e) => {
             </option>
           ))}
         </select>
-
-        {/* Price Range */}
-        <h1 className="mt-5 font-semibold text-xl mb-3">Price Range</h1>
-
-        <label className="text-sm">
-          ₹ {priceRange[0]} - ₹ {priceRange[1]}
-        </label>
-
-        <div className="flex gap-2 items-center">
-          <input
-            type="number"
-            min="0"
-            value={priceRange[0]}
-            onChange={handleMinChange}
-            className="w-24 p-1 border border-gray-300 rounded"
-          />
-          <span>-</span>
-          <input
-            type="number"
-            min="0"
-            value={priceRange[1]}
-            onChange={handleMaxChange}
-            className="w-24 p-1 border border-gray-300 rounded"
-          />
-</div>
-      
-   <input
-  type="range"
-  min={0}
-  max={priceRange[1]}
-  step={100}
-  value={priceRange[0]}
-  onChange={handleMinChange}
-  className="w-full"
-/>
-
-<input
-  type="range"
-  min={priceRange[0]}
-  max={9999999}
-  step={100}
-  value={priceRange[1]}
-  onChange={handleMaxChange}
-  className="w-full"
-/>
-
-
-
-        {/*  Reset */}
-        <Button
-          onClick={resetFilters}
-          className="bg-pink-500 cursor-pointer w-full mt-4"
-        >
-          Reset Filter
-        </Button>
       </div>
+
+      {/* Price Range */}
+      <div className="mb-6">
+        <h1 className="font-semibold text-lg mb-3">Price Range</h1>
+
+        <div className="bg-white p-3 rounded-md border border-gray-300 mb-3">
+          <label className="text-sm font-medium">
+            ₹ {priceRange[0].toLocaleString()} - ₹ {priceRange[1].toLocaleString()}
+          </label>
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex gap-2 items-center">
+            <input
+              type="number"
+              min="0"
+              value={priceRange[0]}
+              onChange={handleMinChange}
+              className="w-full p-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+              placeholder="Min price"
+            />
+            <span className="text-gray-500">-</span>
+            <input
+              type="number"
+              min="0"
+              value={priceRange[1]}
+              onChange={handleMaxChange}
+              className="w-full p-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
+              placeholder="Max price"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <input
+              type="range"
+              min={0}
+              max={priceRange[1]}
+              step={100}
+              value={priceRange[0]}
+              onChange={handleMinChange}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            />
+            <input
+              type="range"
+              min={priceRange[0]}
+              max={9999999}
+              step={100}
+              value={priceRange[1]}
+              onChange={handleMaxChange}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Reset */}
+      <Button
+        onClick={resetFilters}
+        className="bg-pink-500 hover:bg-pink-600 cursor-pointer w-full py-3 text-white font-medium"
+      >
+        Reset Filter
+      </Button>
     </div>
   );
 };

@@ -10,7 +10,7 @@ const VerifyEmail = () => {
   const verifyEmail = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/v1/user/verify/${token}`
+        `${import.meta.env.VITE_API_BASE_URL}/user/verify/${token}`
       );
 
       if (res.data.success) {

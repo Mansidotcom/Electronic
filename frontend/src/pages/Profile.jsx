@@ -83,7 +83,7 @@ const Profile = () => {
       }
 
       const res = await axios.put(
-        `http://localhost:8000/api/v1/user/update/${userId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/user/update/${userId}`,
         formData,
         {
           headers: {
@@ -105,29 +105,28 @@ const Profile = () => {
 
 
   return (
-    <div className="pt-20 min-h-screen bg-gray-100">
-      <Tabs defaultValue="profile" className="max-w-7xl mx-auto items-center">
+    <div className="pt-20 min-h-screen bg-gray-100 px-4">
+      <Tabs defaultValue="profile" className="max-w-7xl mx-auto">
 
-        <TabsList>
+        <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-6">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
         </TabsList>
+
         <TabsContent value="profile">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-lg shadow-sm">
+              <h1 className="font-bold text-center py-6 text-xl md:text-2xl text-gray-800">Update Profile</h1>
 
-
-          <div>
-            <div className="flex flex-col justify-center items-center bg-white">
-              <h1 className="font-bold mb-7 text-2xl text-gray-800">Update Profile</h1>
-              <div className="w-full flex gap-10 justify-center items-start px-7 max-w-2xl">
-
-                {/* profile picture*/}
-                <div className="flex flex-col items-center">
+              <div className="flex flex-col lg:flex-row gap-8 justify-center items-start p-6">
+                {/* Profile picture */}
+                <div className="flex flex-col items-center lg:items-start">
                   <img
                     src={updateUser.profilePic || userLogo}
                     alt="profile"
-                    className="w-32 h-32 rounded-full object-cover border-4 border-pink-500"
+                    className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-pink-500"
                   />
-                  <Label className="mt-2 cursor-pointer bg-pink-600 text-white px-4 py-2 rounded-1 w-40 ">
+                  <Label className="mt-4 cursor-pointer bg-pink-600 text-white px-4 py-2 rounded text-sm font-medium text-center w-full max-w-xs">
                     Change Picture
                     <Input
                       type="file"
@@ -139,94 +138,106 @@ const Profile = () => {
                   </Label>
                 </div>
 
-                {/*profile form*/}
-                <form onSubmit={handleSubmit} className="space-y-4 shadow-lg p-5 rounded-lg bg-white">
-                  <div className="grid grid-col-2  gap-4">
-
+                {/* Profile form */}
+                <form onSubmit={handleSubmit} className="flex-1 max-w-2xl space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label>First Name</Label>
+                      <Label className="text-sm font-medium">First Name</Label>
                       <Input
                         type="text"
-                        placeholder="enter your firstname"
+                        placeholder="Enter your firstname"
                         name="firstname"
                         value={updateUser.firstname}
                         onChange={handleChange}
+                        className="mt-1"
                       />
                     </div>
                     <div>
-                      <Label>Last Name</Label>
+                      <Label className="text-sm font-medium">Last Name</Label>
                       <Input
                         type="text"
-                        placeholder="enter your lastname"
+                        placeholder="Enter your lastname"
                         name="lastname"
                         value={updateUser.lastname}
                         onChange={handleChange}
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-medium">Email</Label>
+                      <Input
+                        value={updateUser.email}
+                        disabled
+                        className="mt-1 bg-gray-50"
                       />
                     </div>
 
                     <div>
-                      <Label>Email</Label>
-                      <Input value={updateUser.email} disabled />
-                    </div>
-
-                    <div>
-                      <Label>Phone</Label>
+                      <Label className="text-sm font-medium">Phone</Label>
                       <Input
                         type="text"
-                        placeholder="enter your email"
+                        placeholder="Enter your phone number"
                         name="phoneNo"
                         value={updateUser.phoneNo}
                         onChange={handleChange}
+                        className="mt-1"
                       />
                     </div>
+
                     <div>
-                      <Label>Address</Label>
+                      <Label className="text-sm font-medium">City</Label>
                       <Input
                         type="text"
-                        placeholder="enter your address"
+                        placeholder="Enter your city"
+                        name="city"
+                        value={updateUser.city}
+                        onChange={handleChange}
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <Label className="text-sm font-medium">Address</Label>
+                      <Input
+                        type="text"
+                        placeholder="Enter your address"
                         name="address"
                         value={updateUser.address}
                         onChange={handleChange}
+                        className="mt-1"
                       />
                     </div>
-                      
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label>City</Label>
-                        <Input
-                          type="text"
-                          placeholder="enter your city"
-                          name="city"
-                          value={updateUser.city}
-                          onChange={handleChange}
-                        />
-                      </div>
 
-                      <div>
-                        <Label>Zip Code</Label>
-                        <Input
-                          type="text"
-                          placeholder="enter your zipCode"
-                          name="zipCode"
-                          value={updateUser.zipCode}
-                          onChange={handleChange}
-                        />
-                      </div>
+                    <div>
+                      <Label className="text-sm font-medium">Zip Code</Label>
+                      <Input
+                        type="text"
+                        placeholder="Enter your zip code"
+                        name="zipCode"
+                        value={updateUser.zipCode}
+                        onChange={handleChange}
+                        className="mt-1"
+                      />
                     </div>
-                    <Button type="submit" className="bg-pink-600 text-white w-full">
+                  </div>
+
+                  <div className="pt-4">
+                    <Button
+                      type="submit"
+                      className="w-full md:w-auto bg-pink-600 hover:bg-pink-700 text-white px-8 py-2"
+                    >
                       Update Profile
                     </Button>
                   </div>
                 </form>
-
               </div>
-
             </div>
           </div>
         </TabsContent>
 
         <TabsContent value="orders">
-         <MyOrder/>
+          <MyOrder />
         </TabsContent>
       </Tabs>
     </div>

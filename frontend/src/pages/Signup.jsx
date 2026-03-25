@@ -43,7 +43,7 @@ const Signup = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        `${import.meta.env.VITE_API_BASE_URL}/user/register`,
         formData,
         {
           headers: {
